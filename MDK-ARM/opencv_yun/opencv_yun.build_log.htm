@@ -1,0 +1,135 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: ¦ÌVision V5.38.0.0
+Copyright (C) 2022 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: 1 admin, 1, LIC=LSNXV-P2CWR-RA4DM-XHHFG-IXFRA-GUUDC
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Plus  Version: 5.43.0.0
+Toolchain Path:  D:\keil_v5\MDK\Core\ARM\ARMCLANG\Bin
+C Compiler:      ArmClang.exe V6.24
+Assembler:       Armasm.exe V6.24
+Linker/Locator:  ArmLink.exe V6.24
+Library Manager: ArmAr.exe V6.24
+Hex Converter:   FromElf.exe V6.24
+CPU DLL:         SARMCM3.DLL V5.43.0.0
+Dialog DLL:      DCM.DLL V1.17.5.0
+Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V3.3.1.0
+Dialog DLL:      TCM.DLL V1.56.6.0
+ 
+<h2>Project:</h2>
+D:\STM32Project\opencv_yun\MDK-ARM\opencv_yun.uvprojx
+Project File Date:  06/08/2026
+
+<h2>Output:</h2>
+*** Using Compiler 'V6.24', folder: 'D:\keil_v5\MDK\Core\ARM\ARMCLANG\Bin'
+Rebuild target 'opencv_yun'
+assembling startup_stm32f103xb.s...
+compiling i2c.c...
+compiling usart.c...
+compiling main.c...
+compiling gpio.c...
+compiling stm32f1xx_hal.c...
+compiling stm32f1xx_hal_msp.c...
+compiling dma.c...
+compiling stm32f1xx_it.c...
+compiling stm32f1xx_hal_rcc_ex.c...
+compiling stm32f1xx_hal_gpio.c...
+compiling stm32f1xx_hal_rcc.c...
+compiling tim.c...
+compiling stm32f1xx_hal_gpio_ex.c...
+compiling stm32f1xx_hal_i2c.c...
+compiling stm32f1xx_hal_cortex.c...
+compiling stm32f1xx_hal_pwr.c...
+compiling stm32f1xx_hal_flash.c...
+compiling stm32f1xx_hal_dma.c...
+compiling stm32f1xx_hal_flash_ex.c...
+compiling stm32f1xx_hal_exti.c...
+compiling system_stm32f1xx.c...
+../servo/control.c(1): error: use of undeclared identifier 'INIT_ANGLE_X'
+    1 | float angle_x = INIT_ANGLE_X;   
+      |                 ^
+../servo/control.c(2): error: use of undeclared identifier 'INIT_ANGLE_Y'
+    2 | float angle_y = INIT_ANGLE_Y;
+      |                 ^
+../servo/control.c(11): error: unknown type name 'uint16_t'
+   11 | uint16_t lost_counter = 0;
+      | ^
+../servo/control.c(18): error: use of undeclared identifier 'MAX_LOST_FRAMES'
+   18 |     if(lost_counter > MAX_LOST_FRAMES) {
+      |                       ^
+../servo/control.c(25): error: call to undeclared library function 'abs' with type 'int (int)'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+   25 |     if (abs(err) < DEADZONE) {
+      |         ^
+../servo/control.c(25): note: include the header <stdlib.h> or explicitly provide a declaration for 'abs'
+../servo/control.c(25): warning: using integer absolute value function 'abs' when argument is of floating point type [-Wabsolute-value]
+   25 |     if (abs(err) < DEADZONE) {
+      |         ^
+../servo/control.c(25): note: use function 'fabsf' instead
+   25 |     if (abs(err) < DEADZONE) {
+      |         ^~~
+      |         fabsf
+../servo/control.c(25): note: include the header <math.h> or explicitly provide a declaration for 'fabsf'
+../servo/control.c(25): error: use of undeclared identifier 'DEADZONE'
+   25 |     if (abs(err) < DEADZONE) {
+      |                    ^
+../servo/control.c(25): warning: using integer absolute value function 'abs' when argument is of floating point type [-Wabsolute-value]
+   25 |     if (abs(err) < DEADZONE) {
+      |         ^
+../servo/control.c(25): note: use function 'fabsf' instead
+   25 |     if (abs(err) < DEADZONE) {
+      |         ^~~
+      |         fabsf
+../servo/control.c(25): note: include the header <math.h> or explicitly provide a declaration for 'fabsf'
+../servo/control.c(46): error: use of undeclared identifier 'MAX_LOST_FRAMES'
+   46 |     if(lost_counter > MAX_LOST_FRAMES) {
+      |                       ^
+../servo/control.c(52): warning: using integer absolute value function 'abs' when argument is of floating point type [-Wabsolute-value]
+   52 |     if (abs(err) < (DEADZONE+3)) {
+      |         ^
+../servo/control.c(52): note: use function 'fabsf' instead
+   52 |     if (abs(err) < (DEADZONE+3)) {
+      |         ^~~
+      |         fabsf
+../servo/control.c(52): note: include the header <math.h> or explicitly provide a declaration for 'fabsf'
+../servo/control.c(52): error: use of undeclared identifier 'DEADZONE'
+   52 |     if (abs(err) < (DEADZONE+3)) {
+      |                     ^
+3 warnings and 8 errors generated.
+compiling control.c...
+compiling stm32f1xx_hal_tim_ex.c...
+compiling serv0.c...
+compiling stm32f1xx_hal_uart.c...
+compiling stm32f1xx_hal_tim.c...
+"opencv_yun\opencv_yun.axf" - 8 Error(s), 3 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: ARM
+                https://www.keil.com/pack/ARM.CMSIS.6.2.0.pack
+                ARM.CMSIS.6.2.0
+                CMSIS (Common Microcontroller Software Interface Standard)
+   * Component: CORE Version: 6.1.1
+
+Package Vendor: Keil
+                https://www.keil.com/pack/Keil.STM32F1xx_DFP.2.4.1.pack
+                Keil.STM32F1xx_DFP.2.4.1
+                STMicroelectronics STM32F1 Series Device Support, Drivers and Examples
+
+<h2>Collection of Component include folders:</h2>
+  ./RTE/_opencv_yun
+  D:/keil_v5/MDK/Pack/ARM/CMSIS/6.2.0/CMSIS/Core/Include
+  D:/keil_v5/MDK/Pack/Keil/STM32F1xx_DFP/2.4.1/Device/Include
+
+<h2>Collection of Component Files used:</h2>
+
+   * Component: ARM::CMSIS:CORE:6.1.1
+      Include file:  CMSIS/Core/Include/tz_context.h
+Target not created.
+Build Time Elapsed:  00:00:03
+</pre>
+</body>
+</html>
