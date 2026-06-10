@@ -26,7 +26,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "control.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,6 +47,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+uint16_t Rx_size = 64;
+uint8_t Rx_buffer[64];
 
 /* USER CODE END PV */
 
@@ -98,6 +100,11 @@ int main(void)
   /* USER CODE BEGIN 2 */
 	HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_1);
 	HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_2);
+	
+	 HAL_TIM_Base_Start_IT(&htim4);
+	
+	HAL_UART_Receive_DMA(&huart1, Rx_buffer, Rx_size);
+	__HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);
 	int i = 0;
 
   /* USER CODE END 2 */
@@ -154,7 +161,13 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+	{
+		if (htim->Instance == TIM4)
+    {
+			control_servo();
+		}
+	}
 /* USER CODE END 4 */
 
 /**

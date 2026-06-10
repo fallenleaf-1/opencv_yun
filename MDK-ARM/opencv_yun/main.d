@@ -30,4 +30,8 @@ opencv_yun/main.o: ..\Core\Src\main.c ..\Core\Inc\main.h \
   ..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_tim_ex.h \
   ..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_uart.h \
   ..\Core\Inc\dma.h ..\Core\Inc\i2c.h ..\Core\Inc\tim.h \
-  ..\Core\Inc\usart.h ..\Core\Inc\gpio.h
+  ..\Core\Inc\usart.h ..\Core\Inc\gpio.h ..\servo\control.h \
+  D:\keil_v5\MDK\Core\ARM\ARMCLANG\bin\..\include\math.h \
+  D:\keil_v5\MDK\Core\ARM\ARMCLANG\bin\..\include\stdbool.h \
+  ..\servo\serv0.h \
+  D:\keil_v5\MDK\Core\ARM\ARMCLANG\bin\..\include\stdlib.h

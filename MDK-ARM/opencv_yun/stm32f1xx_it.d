@@ -29,4 +29,8 @@ opencv_yun/stm32f1xx_it.o: ..\Core\Src\stm32f1xx_it.c ..\Core\Inc\main.h \
   ..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_tim.h \
   ..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_tim_ex.h \
   ..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_uart.h \
-  ..\Core\Inc\stm32f1xx_it.h
+  ..\Core\Inc\stm32f1xx_it.h ..\servo\control.h \
+  D:\keil_v5\MDK\Core\ARM\ARMCLANG\bin\..\include\math.h \
+  D:\keil_v5\MDK\Core\ARM\ARMCLANG\bin\..\include\stdbool.h \
+  ..\servo\serv0.h ..\Core\Inc\tim.h \
+  D:\keil_v5\MDK\Core\ARM\ARMCLANG\bin\..\include\stdlib.h

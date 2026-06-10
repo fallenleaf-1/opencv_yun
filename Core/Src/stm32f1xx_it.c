@@ -20,6 +20,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f1xx_it.h"
+#include "control.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
@@ -41,6 +42,8 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
+extern uint16_t Rx_size;
+extern uint8_t Rx_buffer[64];
 
 /* USER CODE END PV */
 
@@ -249,7 +252,28 @@ void TIM4_IRQHandler(void)
 void USART1_IRQHandler(void)
 {
   /* USER CODE BEGIN USART1_IRQn 0 */
-
+	// 1. 处理 IDLE 空闲中断（一帧数据接收完成）
+    if (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_IDLE) != RESET)
+    {
+        __HAL_UART_CLEAR_IDLEFLAG(&huart1); // 清除 IDLE 标志位
+        
+        // 停止 DMA 接收，防止在解析时又有数据进来
+        HAL_UART_DMAStop(&huart1);
+        
+        // 计算接收到的字节数
+        uint32_t temp = __HAL_DMA_GET_COUNTER(huart1.hdmarx);
+        uint16_t rx_len = 64 - temp;
+        
+        // 解析数据
+        if (rx_len == 7 && Rx_buffer[0] == 0xA3 && Rx_buffer[1] == 0xB3 && Rx_buffer[6] == 0xC3)
+        {
+            opencv_x = Rx_buffer[2] | (Rx_buffer[3] << 8);
+            opencv_y = Rx_buffer[4] | (Rx_buffer[5] << 8);
+        }
+        
+        // 重新开启 DMA 接收
+        HAL_UART_Receive_DMA(&huart1, Rx_buffer, 64);
+    }
   /* USER CODE END USART1_IRQn 0 */
   HAL_UART_IRQHandler(&huart1);
   /* USER CODE BEGIN USART1_IRQn 1 */

@@ -16,4 +16,10 @@
 /* 180度舵机物理边界定义 */
 #define SERVO_MIN_LIMIT 0.0f     
 #define SERVO_MAX_LIMIT 180.0f
+
+extern uint16_t opencv_x;
+extern uint16_t opencv_y;
+void control_servo(void);
+float Servo_PID_X(int current, int target);
+float Servo_PID_Y(int current, int target);
 #endif
