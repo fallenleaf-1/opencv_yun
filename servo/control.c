@@ -23,7 +23,7 @@ float Servo_PID_Y(int current, int target)
     }
     
     /* 正常PID计算 */
-    if (abs(err) < DEADZONE) {
+    if (abs_f(err) < DEADZONE) {
         Y_integral *= 0.9f;   // 渐消积分
         err_last = 0;
         return 0;
