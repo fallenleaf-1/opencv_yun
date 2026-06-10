@@ -112,10 +112,15 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
-  {
-
+  {	
+		Servo_SetAngleX(0);
+		Servo_SetAngleY(0);
+		HAL_Delay(500);
+		Servo_SetAngleY(90);
     /* USER CODE END WHILE */
-
+		HAL_Delay(500);
+		Servo_SetAngleX(90);
+		HAL_Delay(3000);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
