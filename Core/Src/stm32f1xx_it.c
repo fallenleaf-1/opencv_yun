@@ -58,7 +58,7 @@ extern uint8_t Rx_buffer[64];
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-extern TIM_HandleTypeDef htim4;
+extern TIM_HandleTypeDef htim3;
 extern DMA_HandleTypeDef hdma_usart1_rx;
 extern DMA_HandleTypeDef hdma_usart1_tx;
 extern UART_HandleTypeDef huart1;
@@ -233,17 +233,17 @@ void DMA1_Channel5_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles TIM4 global interrupt.
+  * @brief This function handles TIM3 global interrupt.
   */
-void TIM4_IRQHandler(void)
+void TIM3_IRQHandler(void)
 {
-  /* USER CODE BEGIN TIM4_IRQn 0 */
+  /* USER CODE BEGIN TIM3_IRQn 0 */
 
-  /* USER CODE END TIM4_IRQn 0 */
-  HAL_TIM_IRQHandler(&htim4);
-  /* USER CODE BEGIN TIM4_IRQn 1 */
+  /* USER CODE END TIM3_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim3);
+  /* USER CODE BEGIN TIM3_IRQn 1 */
 
-  /* USER CODE END TIM4_IRQn 1 */
+  /* USER CODE END TIM3_IRQn 1 */
 }
 
 /**
@@ -252,26 +252,26 @@ void TIM4_IRQHandler(void)
 void USART1_IRQHandler(void)
 {
   /* USER CODE BEGIN USART1_IRQn 0 */
-	// 1. ´¦Àí IDLE ¿ÕÏÐÖÐ¶Ï£¨Ò»Ö¡Êý¾Ý½ÓÊÕÍê³É£©
+	// 1. ï¿½ï¿½ï¿½ï¿½ IDLE ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶Ï£ï¿½Ò»Ö¡ï¿½ï¿½ï¿½Ý½ï¿½ï¿½ï¿½ï¿½ï¿½É£ï¿½
     if (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_IDLE) != RESET)
     {
-        __HAL_UART_CLEAR_IDLEFLAG(&huart1); // Çå³ý IDLE ±êÖ¾Î»
+        __HAL_UART_CLEAR_IDLEFLAG(&huart1); // ï¿½ï¿½ï¿½ IDLE ï¿½ï¿½Ö¾Î»
         
-        // Í£Ö¹ DMA ½ÓÊÕ£¬·ÀÖ¹ÔÚ½âÎöÊ±ÓÖÓÐÊý¾Ý½øÀ´
+        // Í£Ö¹ DMA ï¿½ï¿½ï¿½Õ£ï¿½ï¿½ï¿½Ö¹ï¿½Ú½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý½ï¿½ï¿½ï¿½
         HAL_UART_DMAStop(&huart1);
         
-        // ¼ÆËã½ÓÊÕµ½µÄ×Ö½ÚÊý
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õµï¿½ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½
         uint32_t temp = __HAL_DMA_GET_COUNTER(huart1.hdmarx);
         uint16_t rx_len = 64 - temp;
         
-        // ½âÎöÊý¾Ý
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         if (rx_len == 7 && Rx_buffer[0] == 0xA3 && Rx_buffer[1] == 0xB3 && Rx_buffer[6] == 0xC3)
         {
             opencv_x = Rx_buffer[2] | (Rx_buffer[3] << 8);
             opencv_y = Rx_buffer[4] | (Rx_buffer[5] << 8);
         }
         
-        // ÖØÐÂ¿ªÆô DMA ½ÓÊÕ
+        // ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ DMA ï¿½ï¿½ï¿½ï¿½
         HAL_UART_Receive_DMA(&huart1, Rx_buffer, 64);
     }
   /* USER CODE END USART1_IRQn 0 */

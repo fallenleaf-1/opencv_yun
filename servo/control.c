@@ -81,14 +81,8 @@ void control_servo(void)
             float x_output = Servo_PID_X(opencv_x - IMG_CX, 0); 
             float y_output = Servo_PID_Y(opencv_y - IMG_CY, 0);
             
-            /* Y 轴越过 90 度时反转 X 和 Y 的移动方向（上一问的镜像逻辑） */
-            if (angle_y > 90.0f) 
-            {
-                x_output = -x_output;
-                y_output = -y_output;
-            }
             
-            angle_x += x_output;
+            angle_x -= x_output;
             angle_y += y_output;
         } 
         else {
@@ -111,4 +105,4 @@ void control_servo(void)
         /* 更新舵机角度 */
         Servo_SetAngleX(angle_x);
         Servo_SetAngleY(angle_y);
-    }
+}

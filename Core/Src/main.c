@@ -19,7 +19,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "dma.h"
-#include "i2c.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -49,6 +48,7 @@
 /* USER CODE BEGIN PV */
 uint16_t Rx_size = 64;
 uint8_t Rx_buffer[64];
+uint8_t system_work_state = 0;
 
 /* USER CODE END PV */
 
@@ -93,34 +93,31 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
-  MX_I2C1_Init();
   MX_TIM3_Init();
   MX_USART1_UART_Init();
   MX_TIM4_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 	HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_1);
 	HAL_TIM_PWM_Start(&htim3,TIM_CHANNEL_2);
 	
-	 HAL_TIM_Base_Start_IT(&htim4);
+	 //HAL_TIM_Base_Start_IT(&htim4);
 	
 	HAL_UART_Receive_DMA(&huart1, Rx_buffer, Rx_size);
 	__HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);
-	int i = 0;
-
+	Servo_SetAngleX(0);
+	Servo_SetAngleY(0);
+	HAL_Delay(1000);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {	
-		Servo_SetAngleX(0);
-		Servo_SetAngleY(0);
-		HAL_Delay(500);
-		Servo_SetAngleY(90);
+		
+		
     /* USER CODE END WHILE */
-		HAL_Delay(500);
-		Servo_SetAngleX(90);
-		HAL_Delay(3000);
+
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -167,12 +164,69 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-	{
-		if (htim->Instance == TIM4)
+{
+    if (htim->Instance == TIM4)
     {
-			control_servo();
-		}
-	}
+        // 1. 如果当前系统允许执行舵机控制，则照常控制
+        if (system_work_state == 1)
+        {
+            control_servo();
+        }
+        
+        // 2. 异步按键状态机扫描（完全不阻塞，不使用 HAL_Delay）
+        // 支持 PB4 和 PB5 独立或共同控制
+        static uint8_t key_state = 0; // 状态机变量：0-等待按下, 1-消抖与松开检测
+        
+        // 读取引脚状态：只要有一个按下即为低电平 (RESET)
+        uint8_t pin_b4 = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4);
+        uint8_t pin_b5 = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_5);
+        
+        switch (key_state)
+        {
+            case 0:
+                // 如果检测到任意按键被按下
+                if (pin_b4 == GPIO_PIN_RESET || pin_b5 == GPIO_PIN_RESET)
+                {
+                    key_state = 1; // 切换到消抖与等待松开状态
+                }
+                break;
+                
+            case 1:
+                // 必须等到所有按键都松开（恢复为高电平 SET）
+                if (pin_b4 == GPIO_PIN_SET && pin_b5 == GPIO_PIN_SET)
+                {
+                    key_state = 0; // 恢复初始状态，准备下一次动作
+                    
+                    /* 执行开关翻转控制（松开时触发） */
+                    if (system_work_state == 1)
+                    {
+                        system_work_state = 0;
+                        
+                        // 停止 UART 接收（不再响应视觉）
+                        HAL_UART_DMAStop(&huart1);
+                        __HAL_UART_DISABLE_IT(&huart1, UART_IT_IDLE);
+                        
+                        // 注意：这里【不要】调用 HAL_TIM_Base_Stop_IT(&htim4) 
+                        // 因为我们正处在 TIM4 中断里，如果把它关了，下次按键就无法开机了。
+                        // 我们通过上面 if(system_work_state == 1) 屏蔽控制逻辑来实现“关闭效果”。
+                    }
+                    else
+                    {
+                        system_work_state = 1;
+                        
+                        // 重新启动 UART 的 DMA 接收与空闲中断
+                        HAL_UART_Receive_DMA(&huart1, Rx_buffer, Rx_size);
+                        __HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);
+                    }
+                }
+                break;
+                
+            default:
+                key_state = 0;
+                break;
+        }
+    }
+}
 /* USER CODE END 4 */
 
 /**
